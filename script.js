@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const messages = chatHistory[chatId] || [];
         const sharedPhotos = messages.filter(msg => msg.contentType === 'image');
         if (sharedPhotosContainer) {
-            sharedPhotosContainer.textContent = `Shared Photos (${sharedPhotos.length})`;
+            sharedPhotosContainer.textContent = `Imagenes Compartidas (${sharedPhotos.length})`;
         }
         photoGrid.innerHTML = '';
         sharedPhotos.reverse().slice(0, 4).forEach((photo, index) => {
@@ -197,9 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // ===============================================
-    // ========= EVENT LISTENERS =====================
-    // ===============================================
 
     sendBtn.addEventListener("click", sendMessage);
     messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); sendMessage(); } });
@@ -253,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- Inicialización al cargar la página ---
     updateTrophyPanel();
     renderSharedPhotos(currentChatId);
 });
