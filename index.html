@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIBO - Asistente | Chatbot</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar-left">
+            <div class="logo-header">
+                <img src="images/bot.webp" alt="KIBO Logo" class="logo-icon">
+                <span class="logo-text">K - I - B - O</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="#" id="chats-link"><i class="fa-solid fa-comment"></i> Chats</a></li>
+                    <li>
+                        <div class="search-bar"><i class="fa-solid fa-magnifying-glass"></i><input type="text"
+                                placeholder="Buscar"></div>
+                    </li>
+                    <li><a href="#"><i class="fa-solid fa-icons"></i> Pictogramas</a></li>
+                    <li><a href="#" id="db-link"><i class="fa-solid fa-database"></i> Data Base</a></li>
+                    <li><a href="#"><i class="fa-solid fa-gamepad"></i> Games</a></li>
+                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Algoritmos</a></li>
+                    <li><a href="#"><i class="fa-solid fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="chatbot-mind">
+                <img src="images/MenteIA.gif" alt="Mente del Chatbot ">
+            </div>
+
+            <div class="user-profile-bottom">
+                <img src="images/Niño.jpg" alt="Abstract sphere" class="user-sphere">
+                <div class="user-info">
+                    <span class="user-name">David Alaric</span>
+                    <span class="user-email">dvidA@gmail.com</span>
+                </div>
+                <i class="fa-solid fa-chevron-up"></i>
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <header class="chat-header">
+                <button class="new-chat-btn" id="new-chat-btn"><i class="fa-solid fa-plus"></i> New chat</button>
+                <div class="header-right">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                    <i class="fa-regular fa-file-lines"></i>
+                    <i class="fa-regular fa-bookmark"></i>
+                    <i class="fa-solid fa-link"></i>
+                </div>
+            </header>
+
+            <div class="chat-history" id="chat-messages">
+            </div>
+
+            <footer class="chat-input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="message-input" placeholder="Type a new message here">
+                    <div class="input-icons">
+                        <i id="attach-file-btn" class="fa-solid fa-paperclip"></i>
+                        <i class="fa-regular fa-face-smile"></i>
+                        <i id="send-audio-btn" class="fa-solid fa-microphone"></i>
+                        <button id="send-btn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="profile-card">
+                <img src="images/IA.jpg" alt="Diego Rojas" class="profile-pic">
+                <h3>Diego Rojas Sihuay</h3>
+                <p>Inteligencia Artificial</p>
+            </div>
+            <div class="achievements-card">
+                <div class="card-header"><img src="images/Cohete.png" alt="rocket icon" class="rocket-icon" />
+                    <h4>Mis Logros</h4>
+                </div>
+                <div id="trophy-display" class="achievements-grid">
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                    <div class="achievement-slot locked">❓</div>
+                </div>
+            </div>
+            <div id="next-goal" class="mission-card">
+                <h5>¡Siguiente misión!</h5>
+                <p>Escribe 5 mensajes más para ganar el trofeo 🙌</p>
+            </div>
+            <div id="panel-images" class="shared-photos">
+                <h5>Imagenes Compartidas</h5>
+                <div class="photo-grid">
+                </div>
+        </aside>
+        <div id="db-container" class="db-view">
+        </div>
+    </div>
+
+    <script src="database/conocimiento.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
