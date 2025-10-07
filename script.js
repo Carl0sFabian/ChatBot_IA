@@ -1,4 +1,47 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- INICIO CÓDIGO MENÚS DESPLEGABLES ---
+    const menuToggleBtn = document.querySelector('.menu-toggle-btn');
+    const profileToggleBtn = document.querySelector('.profile-toggle-btn');
+    const sidebarLeft = document.querySelector('.sidebar-left');
+    const sidebarRight = document.querySelector('.sidebar-right');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    const closeMenuBtns = document.querySelectorAll('.close-menu-btn');
+
+    const closeAllMenus = () => {
+        sidebarLeft.classList.remove('open');
+        sidebarRight.classList.remove('open');
+        menuOverlay.classList.remove('active');
+    };
+
+    if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', () => {
+            if (sidebarRight.classList.contains('open')) {
+                closeAllMenus();
+            }
+            sidebarLeft.classList.add('open');
+            menuOverlay.classList.add('active');
+        });
+    }
+
+    if (profileToggleBtn) {
+        profileToggleBtn.addEventListener('click', () => {
+            if (sidebarLeft.classList.contains('open')) {
+                closeAllMenus();
+            }
+            sidebarRight.classList.add('open');
+            menuOverlay.classList.add('active');
+        });
+    }
+
+    closeMenuBtns.forEach(btn => {
+        btn.addEventListener('click', closeAllMenus);
+    });
+
+    if (menuOverlay) {
+        menuOverlay.addEventListener('click', closeAllMenus);
+    }
+    // --- FIN CÓDIGO MENÚS DESPLEGABLES ---
+
     const sendBtn = document.getElementById("send-btn");
     const messageInput = document.getElementById("message-input");
     const chatMessages = document.getElementById("chat-messages");
@@ -8,11 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendAudioBtn = document.getElementById("send-audio-btn");
     const sharedPhotosContainer = document.querySelector('.shared-photos h5');
     const photoGrid = document.querySelector('.photo-grid');
-
     const chatsLink = document.getElementById('chats-link');
     const dbLink = document.getElementById('db-link');
     const chatArea = document.querySelector('.chat-area');
-    const sidebarRight = document.querySelector('.sidebar-right');
     const dbContainer = document.getElementById('db-container');
 
     const currentChatId = 'default_chat';
@@ -25,24 +66,85 @@ document.addEventListener('DOMContentLoaded', () => {
         35: { id: 't7', emoji: '🎓' }, 40: { id: 't8', emoji: '🌈' }, 45: { id: 't9', emoji: '🏆' }
     };
 
-    const googleSheetIframe = `<iframe src="https://docs.google.com/spreadsheets/d/1Ygd_7Cy9WAsjeCa_j3FZpgBlSgCy56WB/edit?usp=sharing&ouid=114527888935603933122&rtpof=true&sd=true" width="100%" height="100%" frameborder="0"></iframe>`;
+    const googleSheetIframe = `<iframe src="https://docs.google.com/spreadsheets/d/1orqqq8V-VHYByubTQLfQF3n8qqDNgHqW/edit?usp=sharing&ouid=114527888935603933122&rtpof=true&sd=true" width="100%" height="100%" frameborder="0"></iframe>`;
+    const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRnNIzaXTMUII0HlM11Mk-_9R5CpDlPC-c0vTIXKxSd9SoZufFxPuCrAqWXqM1t5Q/pub?output=csv';
+    let baseDeConocimiento = [];
 
+    async function cargarBaseDeConocimiento() {
+        if (!googleSheetURL.startsWith('https')) {
+            console.error("URL del Google Sheet no es válida.");
+            return;
+        }
+        function parseCSVRow(row) {
+            const result = [];
+            let currentField = '';
+            let inQuotedField = false;
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                if (char === '"' && (i === 0 || row[i - 1] !== '\\')) {
+                    inQuotedField = !inQuotedField;
+                } else if (char === ',' && !inQuotedField) {
+                    result.push(currentField.trim().replace(/^"|"$/g, ''));
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            result.push(currentField.trim().replace(/^"|"$/g, ''));
+            return result;
+        }
+
+        try {
+            const response = await fetch(googleSheetURL);
+            let csvData = await response.text();
+            if (csvData.charCodeAt(0) === 0xFEFF) csvData = csvData.substring(1);
+
+            const filas = csvData.trim().split('\n');
+            const cabeceras = filas.shift().split(',').map(h => h.trim().toLowerCase());
+            const idxRespuesta = cabeceras.indexOf('respuesta');
+            const idxPregunta = cabeceras.indexOf('pregunta');
+
+            if (idxPregunta === -1 || idxRespuesta === -1) {
+                console.error("El CSV debe tener las columnas 'pregunta' y 'respuesta'.");
+                return;
+            }
+
+            baseDeConocimiento = filas.map(fila => {
+                const valores = parseCSVRow(fila);
+                return {
+                    pregunta: valores[idxPregunta] || '',
+                    respuesta: valores[idxRespuesta] || ''
+                };
+            });
+            console.log("Base de conocimiento cargada exitosamente.");
+        } catch (error) {
+            console.error("Error al cargar la base de conocimiento:", error);
+        }
+    }
 
     function obtenerRespuesta(preguntaUsuario) {
-        const preguntaLimpia = preguntaUsuario.toLowerCase().trim();
-        let mejorRespuesta = "Lo siento, no entiendo esa pregunta. ¿Puedes intentar reformularla?";
-
-        const itemEncontrado = baseDeConocimiento.find(item => {
-            return item.pregunta && preguntaLimpia.includes(item.pregunta.toLowerCase());
-        });
-
-        if (itemEncontrado) {
-            mejorRespuesta = itemEncontrado.respuesta;
+        if (baseDeConocimiento.length === 0) {
+            return "Mi base de conocimiento aún no está lista. Inténtalo de nuevo en un momento.";
         }
-        return mejorRespuesta;
+
+        const normalizarTexto = (texto) => texto.trim().toLowerCase().replace(/[.,!?;¿¡'"]/g, '');
+        const preguntaNormalizada = normalizarTexto(preguntaUsuario);
+
+        if (preguntaNormalizada === 'hola') {
+            return "Hola, soy K-I-B-O, tu asistente. ¿En qué te puedo ayudar?";
+        }
+
+        const coincidenciaExacta = baseDeConocimiento.find(item => normalizarTexto(item.pregunta) === preguntaNormalizada);
+
+        if (coincidenciaExacta) {
+            return coincidenciaExacta.respuesta;
+        } else {
+            return "Lo siento, no tengo una respuesta para esa pregunta.";
+        }
     }
 
     function updateTrophyPanel() {
+        if (!trophyDisplay) return;
         const slots = trophyDisplay.querySelectorAll(".achievement-slot");
         let nextGoalCount = Infinity;
         let nextGoalInfo = null;
@@ -62,16 +164,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 nextGoalInfo = goal;
             }
         });
-        if (nextGoalInfo) {
-            const remaining = nextGoalCount - messageCount;
-            nextGoalCard.innerHTML = `<h5>¡Siguiente misión!</h5><p>Escribe ${remaining} mensajes más para ganar el trofeo ${nextGoalInfo.emoji}</p>`;
-        } else {
-            nextGoalCard.innerHTML = `<h5>¡Misión completada!</h5><p>Has desbloqueado todos los logros 🎉</p>`;
+        if (nextGoalCard) {
+            if (nextGoalInfo) {
+                const remaining = nextGoalCount - messageCount;
+                nextGoalCard.innerHTML = `<h5>¡Siguiente misión!</h5><p>Escribe ${remaining} mensajes más para ganar el trofeo ${nextGoalInfo.emoji}</p>`;
+            } else {
+                nextGoalCard.innerHTML = `<h5>¡Misión completada!</h5><p>Has desbloqueado todos los logros 🎉</p>`;
+            }
         }
     }
 
     async function buscarPictogramas(texto) {
-        const palabras = texto.toLowerCase().replace(/[.,!?;]/g, '').split(' ');
+        const palabras = texto.toLowerCase().replace(/[.,!?;¿¡]/g, '').split(' ');
         const pictogramasUnicos = new Map();
         const promesas = palabras.map(async (palabra) => {
             if (palabra.length > 2) {
@@ -94,29 +198,60 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(pictogramasUnicos.values());
     }
 
+    function typewriterEffect(element, text, speed = 40) {
+        let i = 0;
+        element.innerHTML = '';
+        element.classList.remove('typing-done');
+
+        const intervalId = setInterval(() => {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                clearInterval(intervalId);
+                element.classList.add('typing-done');
+            }
+        }, speed);
+    }
+
     function renderMessage(msg) {
         const message = document.createElement("div");
         message.classList.add("chat-message", msg.type === 'user' ? "user-message" : "bot-message");
+
         if (chatHistory[currentChatId]) {
             chatHistory[currentChatId].push({ type: msg.type, text: msg.text, contentType: msg.contentType, pictogramas: msg.pictogramas || [] });
         }
+
         let pictogramasHTML = '';
         if (msg.pictogramas && msg.pictogramas.length > 0) {
             pictogramasHTML = `<div class="pictogram-container">${msg.pictogramas.map(url => `<img src="${url}" class="pictogram-image">`).join('')}</div>`;
         }
+
         let contentHTML = '';
         if (msg.contentType === 'image') {
             contentHTML = `<img src="${msg.text}" alt="Imagen adjunta" style="max-width: 200px; border-radius: 12px;">`;
         } else if (msg.contentType === 'audio') {
-            contentHTML = `<div class="audio-bubble"><i class="fas fa-play play-button"></i><div class="audio-wave"><span style="height: 5px;"></span> <span style="height: 15px;"></span> <span style="height: 10px;"></span><span style="height: 20px;"></span> <span style="height: 5px;"></span> <span style="height: 18px;"></span></div></div>`;
+            contentHTML = `<div class="audio-bubble"><i class="fas fa-play play-button"></i><div class="audio-wave"></div></div>`;
         } else {
-            contentHTML = msg.text;
+            contentHTML = msg.type === 'user' ? msg.text : '<span class="bot-text-container"></span>';
         }
+
         if (msg.type === 'user') {
-            message.innerHTML = `<div class="message-content"><div class="message-bubble">${pictogramasHTML}${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span></div></div><img src="images/Logo.jpeg" alt="User" class="avatar">`;
+            message.innerHTML = `<div class="message-content"><div class="message-bubble">${pictogramasHTML}${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span></div></div><img src="images/Niño.jpg" alt="User" class="avatar">`;
         } else {
-            message.innerHTML = `<img src="images/bot.webp" alt="Bot" class="avatar"><div class="message-content"><div class="message-bubble">${contentHTML}<div class="flame-icon"></div></div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span><a href="#">Copy</a><a href="#">Regenerate</a><div class="reactions"><i class="fa-regular fa-thumbs-up"></i><i class="fa-regular fa-thumbs-down"></i></div></div></div>`;
+            message.innerHTML = `<img src="images/bot.webp" alt="Bot" class="avatar"><div class="message-content"><div class="message-bubble">${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span><a href="#">Copy</a><a href="#">Regenerate</a><div class="reactions"><i class="fa-regular fa-thumbs-up"></i><i class="fa-regular fa-thumbs-down"></i></div></div></div>`;
         }
+
+        chatMessages.appendChild(message);
+
+        if (msg.type === 'bot' && !msg.contentType) {
+            const textContainer = message.querySelector('.bot-text-container');
+            if (textContainer) {
+                typewriterEffect(textContainer, msg.text);
+            }
+        }
+
         if (msg.contentType === 'audio') {
             const playBtn = message.querySelector('.play-button');
             const audio = new Audio(msg.text);
@@ -131,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             audio.onended = () => { playBtn.classList.replace('fa-pause', 'fa-play'); };
         }
-        chatMessages.appendChild(message);
+
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
@@ -144,7 +279,17 @@ document.addEventListener('DOMContentLoaded', () => {
         messageCount++;
         updateTrophyPanel();
         renderSharedPhotos(currentChatId);
+
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('chat-message', 'bot-message', 'typing');
+        typingIndicator.innerHTML = `<img src="images/bot.webp" alt="Bot" class="avatar"><div class="message-content"><div class="message-bubble"><span>.</span><span>.</span><span>.</span></div></div>`;
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
         setTimeout(() => {
+            if (typingIndicator.parentNode === chatMessages) {
+                chatMessages.removeChild(typingIndicator);
+            }
             const respuestaBot = obtenerRespuesta(texto);
             renderMessage({ type: 'bot', text: respuestaBot });
         }, 800);
@@ -188,15 +333,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sharedPhotosContainer) {
             sharedPhotosContainer.textContent = `Imagenes Compartidas (${sharedPhotos.length})`;
         }
-        photoGrid.innerHTML = '';
-        sharedPhotos.reverse().slice(0, 4).forEach((photo, index) => {
-            const img = document.createElement('img');
-            img.src = photo.text;
-            img.alt = photo.fileName || `Foto compartida ${index + 1}`;
-            photoGrid.appendChild(img);
-        });
+        if (photoGrid) {
+            photoGrid.innerHTML = '';
+            sharedPhotos.slice(-4).reverse().forEach((photo) => {
+                const img = document.createElement('img');
+                img.src = photo.text;
+                img.alt = `Foto compartida`;
+                photoGrid.appendChild(img);
+            });
+        }
     };
-
 
     sendBtn.addEventListener("click", sendMessage);
     messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); sendMessage(); } });
@@ -218,18 +364,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     sendAudioBtn.addEventListener("click", handleAudioRecording);
 
-
     if (dbLink) {
         dbLink.addEventListener('click', (e) => {
-            e.preventDefault(); 
-
+            e.preventDefault();
             chatArea.style.display = 'none';
-            sidebarRight.style.display = 'none';
-
+            if (sidebarRight) sidebarRight.style.display = 'none';
             dbContainer.style.display = 'block';
             dbContainer.innerHTML = googleSheetIframe;
-
-            chatsLink.parentElement.classList.remove('active');
+            document.querySelectorAll('.main-nav li').forEach(li => li.classList.remove('active'));
             dbLink.parentElement.classList.add('active');
         });
     }
@@ -237,19 +379,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chatsLink) {
         chatsLink.addEventListener('click', (e) => {
             e.preventDefault();
-
             dbContainer.style.display = 'none';
-            dbContainer.innerHTML = ''; 
-
-            chatArea.style.display = 'flex'; 
-            sidebarRight.style.display = 'block';
-
-            dbLink.parentElement.classList.remove('active');
+            dbContainer.innerHTML = '';
+            chatArea.style.display = 'flex';
+            if (sidebarRight) sidebarRight.style.display = 'flex';
+            document.querySelectorAll('.main-nav li').forEach(li => li.classList.remove('active'));
             chatsLink.parentElement.classList.add('active');
         });
     }
 
-
+    await cargarBaseDeConocimiento();
     updateTrophyPanel();
     renderSharedPhotos(currentChatId);
 });

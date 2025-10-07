@@ -53,8 +53,16 @@
 
         <main class="chat-area">
             <header class="chat-header">
+                <button class="menu-toggle-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
                 <button class="new-chat-btn" id="new-chat-btn"><i class="fa-solid fa-plus"></i> New chat</button>
+                
                 <div class="header-right">
+                    <button class="profile-toggle-btn">
+                        <i class="fa-solid fa-user"></i>
+                    </button>
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                     <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
                     <i class="fa-regular fa-file-lines"></i>
@@ -80,6 +88,8 @@
         </main>
 
         <aside class="sidebar-right">
+            <button class="close-menu-btn">&times;</button>
+            
             <div class="profile-card">
                 <img src="images/IA.jpg" alt="Diego Rojas" class="profile-pic">
                 <h3>Diego Rojas Sihuay</h3>
@@ -109,14 +119,15 @@
                 <h5>Imagenes Compartidas</h5>
                 <div class="photo-grid">
                 </div>
+            </div>
         </aside>
+
         <div id="db-container" class="db-view">
         </div>
     </div>
+    
+    <div class="menu-overlay"></div>
 
-    <script src="database/conocimiento.js"></script>
     <script src="script.js"></script>
-
 </body>
-
 </html>
