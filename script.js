@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (msg.type === 'user') {
-            message.innerHTML = `<div class="message-content"><div class="message-bubble">${pictogramasHTML}${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span></div></div><img src="images/Niño.jpg" alt="User" class="avatar">`;
+            message.innerHTML = `<div class="message-content"><div class="message-bubble">${pictogramasHTML}${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span></div></div><img src="images/Logo.jpeg" alt="User" class="avatar">`;
         } else {
             message.innerHTML = `<img src="images/bot.webp" alt="Bot" class="avatar"><div class="message-content"><div class="message-bubble">${contentHTML}</div><div class="message-meta"><span>${new Date().toLocaleDateString("es-ES")}</span><a href="#">Copy</a><a href="#">Regenerate</a><div class="reactions"><i class="fa-regular fa-thumbs-up"></i><i class="fa-regular fa-thumbs-down"></i></div></div></div>`;
         }
