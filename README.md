@@ -162,14 +162,76 @@ Antes de que los datos pudieran ser utilizados, se aplicó un proceso de **limpi
 Los pasos fueron los siguientes:
 
 - **Limpieza de Nulos y Espacios en Blanco:** Se eliminaron todas las filas que no contenían valor en la columna *pregunta* o *respuesta*. Adicionalmente, se removieron los espacios en blanco al inicio y al final de cada texto para descartar registros que solo contenían espacios vacíos.
+  ```python
+  # Eliminar filas donde 'pregunta' o 'respuesta' sean null o estén vacías
+  df_combinado.dropna(subset=['pregunta', 'respuesta'], inplace=True)
+  
+  # Eliminar espacios iniciales y finales
+  df_combinado['pregunta'] = df_combinado['pregunta'].astype(str).str.strip()
+  df_combinado['respuesta'] = df_combinado['respuesta'].astype(str).str.strip()
+  
+  # Hacer una segunda eliminación de datos en blanco
+  df_combinado = df_combinado[(df_combinado['pregunta'] != '') & (df_combinado['respuesta'] != '')]
 
 - **Eliminación de Duplicados:** Se aplicó una función para borrar todas las filas que eran copias exactas de otras. Este paso es crucial para evitar que el modelo de IA se sobreajuste a ejemplos repetidos y para garantizar que el conjunto de datos sea lo más variado posible.
+  ```python
+  # Eliminar duplicados
+  df_combinado.drop_duplicates(inplace=True)
 
 - **Limitación de extensión de las cadenas de texto:** Se implementó un filtro para eliminar aquellas cadenas de texto que superaran las **150 palabras**. Dado que el modelo está en una etapa inicial, se optó por trabajar con un dataset limitado y controlado.
+  ```python
+  # Eliminar filas con más de 150 palabras en 'pregunta' o 'respuesta'
+  word_threshold = 150
+  df_combinado = df_combinado[
+      (df_combinado['pregunta'].apply(lambda x: len(str(x).split())) <= word_threshold) &
+      (df_combinado['respuesta'].apply(lambda x: len(str(x).split())) <= word_threshold)
+  ]
 
 - **Normalización del texto:** Se estandarizó todo el texto, transformando las cadenas a **minúsculas**, eliminando **saltos de línea (\n)** y **tabulaciones (\t)**, y manejando algunas contracciones (por ejemplo, convertir *‘q’* en *que*). Este paso es importante para evitar inconsistencias al aplicar los algoritmos y asegurar que los resultados sean coherentes.
+  ```python
+  def normalize_text(text):
+      if isinstance(text, str):
+          #Eliminar saltos de línea y tabulaciones
+          text = re.sub(r'[\n\t]', ' ', text)
+          #Convertir a minúsculas
+          text = text.lower()
+          #Manejar constracciones más comunes
+          text = re.sub(r'\bq\b', ' que', text)
+          text = re.sub(r'\btoy\b', ' estoy', text)
+          text = re.sub(r'\bd\b', ' de', text)
+          text = re.sub(r'\bpa\b', ' para', text)
+          text = re.sub(r'\bt\b', ' te', text)
+          #Eliminar solo el punto final si existe
+          text = re.sub(r'\.$', '', text)
+          #Reemplazar comillas dobles por comillas simples
+          text = text.replace('"', "'")
+          #Eliminar posibles espacios duplicados
+          text = re.sub(r'\s+', ' ', text).strip()
+          return text
+      else:
+          return ""
 
 - **Tokenización del texto:** Se empleó un algoritmo de **tokenización** para dividir las cadenas de texto en palabras. Se agregaron nuevas columnas al dataset con los textos tokenizados, lo que proporciona flexibilidad para trabajar tanto con las cadenas completas como con las tokenizadas. Además, permite aplicar algoritmos de **procesamiento de lenguaje natural (NLP)** con mayor efectividad.
+  ```python
+  def tokenize_text(text):
+      if isinstance(text, str):
+          tokens = word_tokenize(text, language='spanish')
+          tokens = [t for t in tokens if t not in string.punctuation]
+          return tokens
+      else:
+          return []
 
 Una vez realizados estos procesos, se garantiza que el dataset es de **alta calidad**, sin datos corruptos, redundantes o poco eficientes para la construcción del modelo. Sin embargo, todavía se tiene un volumen considerable de datos no óptimo para procesar por los algoritmos seleccionados (**828,050 registros**). Por esta razón, se considerará una **muestra final de 6,000 registros aleatorios**, utilizando un **muestreo estratificado** con cada dataset como estrato.
+
+A continuación se muestra información sobre el conjunto final de datos obtenido luego de la limpieza realizada.
+
+| **Columna**             | **Tipo de variable** | **Descripción** |
+|--------------------------|----------------------|-----------------|
+| **pregunta**             | *string*             | Es la pregunta o enunciado normalizado del dataset original. |
+| **respuesta**            | *string*             | Es la respuesta o interpretación normalizada correspondiente a la pregunta. |
+| **origen**               | *string*             | Dataset de origen del registro, es de tipo categórico y puede ser “xnli”, “fairytale” o “spa_train”. |
+| **pregunta_tokenizada**  | *arreglo*            | Es un vector compuesto de las palabras que componen la pregunta o enunciado tokenizado. |
+| **respuesta_tokenizada** | *arreglo*            | Es un vector compuesto de las palabras que componen la respuesta o interpretación tokenizada. |
+
+**Código:** [🔗 Parcial - Dataset-Chatbot-IA.ipynb](https://colab.research.google.com/drive/10sadXm8uxeJ6Hcwe1_mPFU0VbCz5NURx?usp=sharing)
 
