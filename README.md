@@ -146,3 +146,30 @@ Los datasets fuente fueron:
   else:
       df_spanish_train = None
       print("spanish-train dataset not found.")
+
+## Descripción del conjunto de datos
+
+En lugar de partir de un único archivo, nuestro conjunto de datos final es el resultado de la **combinación de tres fuentes distintas** obtenidas desde el **hub de Hugging Face**.  
+Este enfoque garantiza una amplia variedad de **estilos de conversación, temas y niveles de complejidad**.
+
+Estos datasets se cargaron y sus columnas se **estandarizaron a un formato común de pregunta y respuesta** antes de ser combinados en un único archivo.  
+De este gran conjunto de datos, se extrajo una **muestra aleatoria** para crear el archivo que se utilizará en la fase de desarrollo:  
+`combined_dataset_sample_5000.csv`.
+
+## Preprocesamiento de datos
+
+Antes de que los datos pudieran ser utilizados, se aplicó un proceso de **limpieza fundamental** sobre el dataset combinado (de más de **1.3 millones de filas**) para asegurar su calidad e integridad.  
+Los pasos fueron los siguientes:
+
+- **Limpieza de Nulos y Espacios en Blanco:** Se eliminaron todas las filas que no contenían valor en la columna *pregunta* o *respuesta*. Adicionalmente, se removieron los espacios en blanco al inicio y al final de cada texto para descartar registros que solo contenían espacios vacíos.
+
+- **Eliminación de Duplicados:** Se aplicó una función para borrar todas las filas que eran copias exactas de otras. Este paso es crucial para evitar que el modelo de IA se sobreajuste a ejemplos repetidos y para garantizar que el conjunto de datos sea lo más variado posible.
+
+- **Limitación de extensión de las cadenas de texto:** Se implementó un filtro para eliminar aquellas cadenas de texto que superaran las **150 palabras**. Dado que el modelo está en una etapa inicial, se optó por trabajar con un dataset limitado y controlado.
+
+- **Normalización del texto:** Se estandarizó todo el texto, transformando las cadenas a **minúsculas**, eliminando **saltos de línea (\n)** y **tabulaciones (\t)**, y manejando algunas contracciones (por ejemplo, convertir *‘q’* en *que*). Este paso es importante para evitar inconsistencias al aplicar los algoritmos y asegurar que los resultados sean coherentes.
+
+- **Tokenización del texto:** Se empleó un algoritmo de **tokenización** para dividir las cadenas de texto en palabras. Se agregaron nuevas columnas al dataset con los textos tokenizados, lo que proporciona flexibilidad para trabajar tanto con las cadenas completas como con las tokenizadas. Además, permite aplicar algoritmos de **procesamiento de lenguaje natural (NLP)** con mayor efectividad.
+
+Una vez realizados estos procesos, se garantiza que el dataset es de **alta calidad**, sin datos corruptos, redundantes o poco eficientes para la construcción del modelo. Sin embargo, todavía se tiene un volumen considerable de datos no óptimo para procesar por los algoritmos seleccionados (**828,050 registros**). Por esta razón, se considerará una **muestra final de 6,000 registros aleatorios**, utilizando un **muestreo estratificado** con cada dataset como estrato.
+
