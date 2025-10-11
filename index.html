@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <meta charset="utf-g" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>K-I-B-O</title>
     <link rel="icon" type="image/png" href="images/Logo IA.png" />
@@ -26,12 +26,12 @@
             <div class="header-left">
                 <div class="avatar-wrap">
                     <div class="avatar-border"></div>
-                    <img class="avatar-img" src="images/VS.png" alt="avatar" />
+                    <img class="avatar-img" src="images/VS.png" alt="avatar" id="user-avatar" />
                     <div class="avatar-status"></div>
                 </div>
                 <div class="user-meta">
-                    <div class="user-name">Carlos Fabian</div>
-                    <div class="user-role">Estudiante</div>
+                    <div class="user-name" id="user-name">Cargando...</div>
+                    <div class="user-role" id="user-role">...</div>
                 </div>
             </div>
             <div class="header-action" id="toggle-sidebar-btn">
@@ -100,7 +100,13 @@
                 <div class="nav-card__label">Configuración</div>
                 <div class="nav-card__pill">9</div>
             </div>
+
+            <div class="nav-card" id="logout-btn" style="cursor: pointer;">
+                <div class="nav-card__icon" style="color: #FF5E61;"><i class="fa-solid fa-right-from-bracket"></i></div>
+                <div class="nav-card__label" style="color: #FF5E61;">Cerrar Sesión</div>
+            </div>
         </div>
+
         <div class="historial-title">
             <div class="historial-text">Historial de Chats</div>
             <div class="historial-see">Ver todos</div>
@@ -131,7 +137,7 @@
         <section id="inicio" class="content-section">
 
             <div class="welcome-header">
-                <h2>¡Bienvenido de nuevo, Carlos!</h2>
+                <h2 id="welcome-message">¡Bienvenido!</h2>
                 <p>Aquí tienes un resumen de tu actividad reciente. ¿Qué te gustaría hacer hoy?</p>
             </div>
 
@@ -311,6 +317,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="script.js"></script>
 
     <div class="modal-overlay hidden" id="add-chat-modal-overlay">
