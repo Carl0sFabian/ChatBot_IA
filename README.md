@@ -88,3 +88,22 @@ Diseñar y desarrollar un prototipo de chatbot que facilite la comunicación fun
 
 La base para un modelo de IA conversacional robusto es un conjunto de datos diverso y de alta calidad. El proceso para construir nuestro dataset se centró en la obtención, combinación y limpieza de múltiples fuentes de datos para entrenamiento de modelos de IA en español. Para ello, se realizó una búsqueda exhaustiva en plataformas de datasets como Github, Kaggle y Hugging Face. Finalmente, se seleccionaron tres conjuntos de datos de Hugging Face, obteniéndose mediante las librerías de pandas y datasets en Google Colab.
 
+Los datasets fuente fueron:
+
+- **Harsit/xnli2.0_train_spanish:** Es parte de la Cross-lingual Natural Language Inference (XNLI) corpus. Se compone de pares de frases (premisa e hipótesis) en español. Es útil para tareas de comprensión del lenguaje natural y razonamiento, ya que aporta pares de frases que ayudan al modelo a entender el razonamiento y la inferencia.
+
+  Obtenido de: [https://huggingface.co/datasets/Harsit/xnli2.0_train_spanish](https://huggingface.co/datasets/Harsit/xnli2.0_train_spanish)
+
+  Se obtuvo el dataset leyendo la ruta del archivo csv publicado de la fuente original.
+
+- **Benjleite/FairytaleQA-translated-spanish:** Contiene preguntas y respuestas sobre cuentos infantiles en español. Es útil para tareas de respuesta a preguntas y comprensión de lectura. Dado que contiene preguntas y respuestas sencillas sobre cuentos infantiles, es un material temático ideal para nuestro público objetivo.
+
+  Obtenido de: [https://huggingface.co/datasets/benjleite/FairytaleQA-translated-spanish](https://huggingface.co/datasets/benjleite/FairytaleQA-translated-spanish)
+
+  El dataset se obtuvo mediante una lectura de json de los datos de entrenamiento de la fuente de origen.
+
+- **Kukedlc/spanish-train:** Contiene pares de instrucción y pregunta en español (equivalentes a input y output) de conversaciones e interacciones de un chatbot externo. Ofrece un corpus general de instrucciones y respuestas útil como conocimiento general del chatbot sobre diversos dominios de temas más avanzados. Asimismo, ofrece una estructura de ejemplo para estructurar las respuestas.  
+
+  Obtenido de: [https://huggingface.co/datasets/Kukedlc/spanish-train](https://huggingface.co/datasets/Kukedlc/spanish-train)
+
+  Se obtuvieron los datos mediante `load_dataset`, una función que permite cargar conjunto de datos de Hugging Face.
