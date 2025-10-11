@@ -13,10 +13,10 @@
         :root {
             --bg-color: #02040A;
             --primary-color: #0077FF;
-            --glass-bg: rgba(10, 25, 47, 0.6);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(10, 25, 47, .6);
+            --border-color: rgba(255, 255, 255, .1);
             --text-primary: #E6F1FF;
-            --text-secondary: #8892B0;
+            --text-secondary: #8892B0
         }
 
         body {
@@ -27,59 +27,23 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            position: relative;
+            position: relative
         }
 
-        .avatar-uploader {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: var(--text-secondary);
-        }
-
-        .avatar-preview-container {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 2px dashed var(--border-color);
-            display: grid;
-            place-items: center;
-            position: relative;
+        #test-connection-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            background-color: #ffc107;
+            color: #000;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            overflow: hidden;
-            transition: border-color 0.3s ease;
+            font-weight: 700
         }
 
-        .avatar-preview-container:hover {
-            border-color: var(--primary-color);
-        }
-
-        #avatar-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .avatar-preview-container i {
-            font-size: 30px;
-            color: var(--text-secondary);
-            z-index: 5;
-            transition: color 0.3s ease;
-        }
-
-        .avatar-preview-container:hover i {
-            color: var(--primary-color);
-        }
-
-        #signup-avatar {
-            display: none;
-        }
-
-        /* ... (El resto de tus estilos CSS van aquí sin cambios) ... */
         .aurora-background {
             position: absolute;
             top: 50%;
@@ -481,37 +445,28 @@
 </head>
 
 <body class="login-page">
+    <button id="test-connection-btn">Probar Conexión</button>
     <div class="aurora-background">
         <div class="aurora aurora-1"></div>
         <div class="aurora aurora-2"></div>
     </div>
-
     <div class="auth-container" id="auth-container">
         <div class="content-wrapper" id="content-wrapper">
-
             <div class="panel form-panel">
                 <button class="back-to-welcome-btn" title="Volver"><i class="fas fa-arrow-left"></i></button>
                 <form id="login-form">
                     <h1>Iniciar Sesión</h1>
-                    <div class="social-container">
-                        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social"><i class="fab fa-github"></i></a>
-                    </div>
+                    <div class="social-container"><a href="#" class="social"><i class="fab fa-google-plus-g"></i></a><a
+                            href="#" class="social"><i class="fab fa-facebook-f"></i></a><a href="#" class="social"><i
+                                class="fab fa-github"></i></a></div>
                     <p>o usa tu cuenta</p>
-                    <div class="input-group">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="login-email" placeholder="Correo" required />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="login-password" placeholder="Contraseña" required />
-                    </div>
-                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                    <button type="submit">Iniciar Sesión</button>
+                    <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="login-email"
+                            placeholder="Correo" required /></div>
+                    <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="login-password"
+                            placeholder="Contraseña" required /></div><a href="#" class="forgot-password">¿Olvidaste tu
+                        contraseña?</a><button type="submit">Iniciar Sesión</button>
                 </form>
             </div>
-
             <div class="panel bot-panel" id="bot-panel">
                 <div class="bot-wrapper" id="bot-wrapper">
                     <div class="bot">
@@ -528,30 +483,16 @@
                     <h1>¡Hola, soy K-I-B-O!</h1>
                     <p>Tu asistente inteligente. ¿Estás listo para empezar?</p>
                 </div>
-                <div class="welcome-actions">
-                    <button id="show-login-btn">Iniciar Sesión</button>
-                    <button id="show-signup-btn" class="ghost">Crear Cuenta</button>
-                </div>
+                <div class="welcome-actions"><button id="show-login-btn">Iniciar Sesión</button><button
+                        id="show-signup-btn" class="ghost">Crear Cuenta</button></div>
             </div>
-
             <div class="panel form-panel">
                 <button class="back-to-welcome-btn" title="Volver"><i class="fas fa-arrow-left"></i></button>
                 <form id="signup-form">
                     <h1>Crear Cuenta</h1>
-                    <div class="avatar-uploader">
-                        <label for="signup-avatar" class="avatar-preview-container" title="Elige un avatar">
-                            <img id="avatar-preview" src="" alt="">
-                            <i id="avatar-icon" class="fas fa-camera"></i>
-                        </label>
-                        <input type="file" id="signup-avatar" accept="image/*">
-                        <span style="font-size: 14px;">Elige tu avatar (opcional)</span>
-                    </div>
-                    <div class="role-selector">
-                        <input type="radio" id="role-user" name="role" value="user" checked><label
-                            for="role-user">Estudiante</label>
-                        <input type="radio" id="role-teacher" name="role" value="teacher"><label
-                            for="role-teacher">Profesor</label>
-                    </div>
+                    <div class="role-selector"><input type="radio" id="role-user" name="role" value="user"
+                            checked><label for="role-user">Estudiante</label><input type="radio" id="role-teacher"
+                            name="role" value="teacher"><label for="role-teacher">Profesor</label></div>
                     <div class="input-group"><i class="fas fa-user"></i><input type="text" id="signup-name"
                             placeholder="Nombre" required /></div>
                     <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="signup-email"
@@ -563,16 +504,12 @@
             </div>
         </div>
     </div>
-
-    <script>
-        const container = document.getElementById("auth-container"), showLoginBtn = document.getElementById("show-login-btn"), showSignupBtn = document.getElementById("show-signup-btn"), backBtns = document.querySelectorAll(".back-to-welcome-btn"), botWrapper = document.getElementById("bot-wrapper"), botPanel = document.getElementById("bot-panel"); container.classList.add("show-welcome"), showLoginBtn.addEventListener("click", () => { container.classList.remove("show-welcome", "show-signup"), container.classList.add("show-login") }), showSignupBtn.addEventListener("click", () => { container.classList.remove("show-welcome", "show-login"), container.classList.add("show-signup") }), backBtns.forEach(e => { e.addEventListener("click", t => { t.preventDefault(), container.classList.remove("show-login", "show-signup"), container.classList.add("show-welcome") }) }), botPanel && botWrapper && (botPanel.addEventListener("mousemove", e => { const t = botPanel.getBoundingClientRect(), o = e.clientX - t.left, n = e.clientY - t.top, a = (o - t.width / 2) / 25, i = (n - t.height / 2) / 25; botWrapper.style.transform = `translate(${a}px, ${i}px)` }), botPanel.addEventListener("mouseleave", () => { botWrapper.style.transform = "translate(0, 0)" }));
-    </script>
+    <script>const container = document.getElementById("auth-container"), showLoginBtn = document.getElementById("show-login-btn"), showSignupBtn = document.getElementById("show-signup-btn"), backBtns = document.querySelectorAll(".back-to-welcome-btn"); container.classList.add("show-welcome"), showLoginBtn.addEventListener("click", () => { container.classList.remove("show-welcome", "show-signup"), container.classList.add("show-login") }), showSignupBtn.addEventListener("click", () => { container.classList.remove("show-welcome", "show-login"), container.classList.add("show-signup") }), backBtns.forEach(e => { e.addEventListener("click", t => { t.preventDefault(), container.classList.remove("show-login", "show-signup"), container.classList.add("show-welcome") }) });</script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBQa0qbVaqTvpFGAJjFj2BTRm1c29z48fw",
@@ -583,98 +520,84 @@
             appId: "1:983754137013:web:31731ce76eb8c036d7cdfc",
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            console.log("Firebase se inicializó correctamente.");
 
-        const avatarInput = document.getElementById('signup-avatar');
-        const avatarPreview = document.getElementById('avatar-preview');
-        const avatarIcon = document.getElementById('avatar-icon');
-
-        avatarInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    avatarPreview.src = event.target.result;
-                    avatarIcon.style.display = 'none';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        const signupForm = document.getElementById('signup-form');
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const submitButton = signupForm.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'CREANDO...';
-
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const role = document.querySelector('input[name="role"]:checked').value;
-            const avatarFile = avatarInput.files[0];
-
-            try {
-                console.log("Paso 1: Creando usuario en Authentication...");
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                console.log("Paso 1: Éxito. Usuario creado con UID:", user.uid);
-
-                console.log("--- Iniciando prueba de escritura en Firestore ---");
+            document.getElementById('test-connection-btn').addEventListener('click', async () => {
                 try {
-                    await setDoc(doc(db, "users", user.uid), { testWrite: true });
-                    console.log("✅ ¡PRUEBA EXITOSA! Se pudo escribir en Firestore.");
-                } catch (firestoreError) {
-                    console.error("❌ ### FALLO LA PRUEBA DE ESCRITURA ###");
-                    console.error("Este error significa que tus REGLAS DE SEGURIDAD de Firestore están bloqueando la creación de documentos.");
-                    console.error(firestoreError);
-                    alert("ERROR: No se pudo guardar el perfil. Revisa las reglas de seguridad de Firestore en tu consola de Firebase. El error es: 'Missing or insufficient permissions'.");
+                    await fetch(`https://${auth.app.options.authDomain}`, { mode: 'no-cors' });
+                    alert('✅ ¡Prueba de Conexión Exitosa! La red parece estar bien.');
+                } catch (error) {
+                    alert('❌ ¡Prueba de Conexión Fallida! Hay un problema de red. Revisa tu antivirus, firewall o VPN.');
+                    console.error("Error en prueba de conexión:", error);
+                }
+            });
+
+            const signupForm = document.getElementById('signup-form');
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitButton = signupForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.textContent = 'CREANDO...';
+
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const role = document.querySelector('input[name="role"]:checked').value;
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+
+                    const avatarUrl = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}`;
+                    await updateProfile(user, {
+                        displayName: name,
+                        photoURL: avatarUrl
+                    });
+
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: name,
+                        email: email,
+                        role: role,
+                        avatarUrl: avatarUrl
+                    });
+
+                    alert(`¡Cuenta para ${name} creada exitosamente!`);
+                    window.location.href = 'index.html';
+
+                } catch (error) {
+                    console.error('Error al crear usuario:', error.code, error.message);
+                    let userMessage = "Ocurrió un error al registrar la cuenta.";
+                    if (error.code === 'auth/email-already-in-use') {
+                        userMessage = 'Error: El correo electrónico ya está en uso.';
+                    } else if (error.code === 'auth/network-request-failed') {
+                        userMessage = 'Error de Red: No se pudo conectar a Firebase. Por favor, revisa tu conexión, antivirus, firewall y asegúrate de que los dominios (localhost, 127.0.0.1) estén autorizados en Firebase Authentication.';
+                    } else {
+                        userMessage += ` (${error.code})`;
+                    }
+                    alert(userMessage);
                     submitButton.disabled = false;
                     submitButton.textContent = 'CREAR CUENTA';
-                    return;
                 }
+            });
 
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                signInWithEmailAndPassword(auth, email, password)
+                    .then(() => { window.location.href = 'index.html'; })
+                    .catch(() => { alert("Correo o contraseña incorrectos."); });
+            });
 
-                let avatarUrl = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name)}`;
-                if (avatarFile) {
-                    const storageRef = ref(storage, `avatars/${user.uid}`);
-                    await uploadBytes(storageRef, avatarFile);
-                    avatarUrl = await getDownloadURL(storageRef);
-                }
-
-                await updateProfile(user, {
-                    displayName: name,
-                    photoURL: avatarUrl
-                });
-
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    email: email,
-                    role: role,
-                    avatarUrl: avatarUrl
-                });
-
-                alert(`¡Cuenta para ${name} creada exitosamente!`);
-                window.location.href = 'index.html';
-
-            } catch (authError) {
-                console.error('Error de Autenticación:', authError);
-                alert("Ocurrió un error al registrar la cuenta: " + authError.message);
-                submitButton.disabled = false;
-                submitButton.textContent = 'CREAR CUENTA';
-            }
-        });
-
-        const loginForm = document.getElementById('login-form');
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            signInWithEmailAndPassword(auth, email.value, password.value)
-                .then(() => { window.location.href = 'index.html'; })
-                .catch((error) => { alert("Correo o contraseña incorrectos."); });
-        });
+        } catch (e) {
+            console.error("Error fatal al inicializar Firebase. Revisa tu `firebaseConfig`.", e);
+            alert("Error fatal al inicializar Firebase. Revisa la consola para más detalles.");
+        }
     </script>
 </body>
 

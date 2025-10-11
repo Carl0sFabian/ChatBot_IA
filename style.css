@@ -20,7 +20,6 @@ body {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding: 20px 0;
     background: linear-gradient(180deg, #041B3A 0%, #021022 100%);
     border: 2px solid rgba(255, 255, 255, 0.05);
@@ -254,6 +253,7 @@ body {
     height: 80px;
     position: absolute;
     border-radius: 50px;
+    object-fit: cover;
 }
 
 .avatar-status {
@@ -376,6 +376,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .chat-avatar-container {
@@ -440,14 +441,31 @@ body {
     flex-grow: 1;
 }
 
+/* === REGLAS PARA EL SCROLL DEL HISTORIAL === */
 .chat-list {
     position: absolute;
-    top: 650px;
+    top: 640px;
+    bottom: 80px;
     left: 30px;
     width: 260px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.chat-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 119, 255, 0.4);
+    border-radius: 10px;
 }
 
 .chat-item__icon {
@@ -529,6 +547,37 @@ body {
 
 .theme-thumb-moon {
     left: 151.65px;
+}
+
+/* === REGLAS PARA EL BOTÓN DE CERRAR SESIÓN === */
+.logout-button-container {
+    position: absolute;
+    bottom: 10px;
+    left: 30px;
+    width: 260px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.2s ease;
+    z-index: 5;
+}
+
+.logout-button-container .nav-card__icon,
+.logout-button-container .nav-card__label {
+    color: #FF5E61 !important;
+}
+
+.logout-button-container:hover {
+    background-color: rgba(255, 94, 97, 0.1);
+}
+
+.panel:not(.expanded) .logout-button-container {
+    width: 100%;
+    left: 0;
+    justify-content: center;
+}
+
+.panel:not(.expanded) .logout-button-container .nav-card__label {
+    display: none;
 }
 
 .chat-interface {
@@ -1710,23 +1759,211 @@ input:checked+.slider:before {
     resize: none;
     tab-size: 4;
 }
+/* === ESTILOS PARA LA NUEVA SECCIÓN DE CONFIGURACIÓN === */
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
 
-/* En tu archivo style.css */
-.logout-btn {
-    margin-top: 15px;
-    /* Espacio extra */
+.settings-container h2 {
+    color: #FFFFFF;
+    border-bottom: 1px solid #172E4D;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+.settings-card {
+    background: linear-gradient(180deg, #041B3A 0%, #0A1C33 100%);
+    border: 1px solid #172E4D;
+    border-radius: 15px;
+    padding: 25px;
+    color: #CFD9E6;
+}
+
+.settings-card h3 {
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.profile-settings-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.avatar-settings-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-settings-container #settings-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #172E4D;
+}
+
+.edit-avatar-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: #0077FF;
+    color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
     cursor: pointer;
+    border: 2px solid #0A1C33;
+    transition: transform 0.2s ease;
 }
 
-.logout-btn .nav-card__icon {
-    color: #FF5E61 !important;
+.edit-avatar-button:hover {
+    transform: scale(1.1);
 }
 
-.logout-btn .nav-card__label {
-    color: #FF5E61 !important;
+.profile-inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.logout-btn:hover {
-    background-color: rgba(255, 94, 97, 0.1);
-    border-radius: 28px;
+.settings-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #7D96B3;
+}
+
+.settings-input-group input {
+    background-color: #030D1A;
+    border: 1px solid #172E4D;
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: #EBF0F5;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.settings-input-group input:focus {
+    border-color: #0077FF;
+}
+
+.settings-input-group input:disabled {
+    background-color: #102540;
+    color: #7D96B3;
+    cursor: not-allowed;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #172E4D;
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.settings-row p {
+    font-size: 14px;
+    color: #7D96B3;
+    margin: 5px 0 0 0;
+}
+
+.btn-primary, .btn-secondary, .btn-danger {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #0077FF;
+    color: #FFFFFF;
+}
+.btn-primary:hover {
+    background-color: #298eff;
+}
+
+.btn-secondary {
+    background-color: #172E4D;
+    color: #CFD9E6;
+}
+.btn-secondary:hover {
+    background-color: #2a4a75;
+}
+
+.btn-danger {
+    background-color: #CC3333;
+    color: #FFFFFF;
+}
+.btn-danger:hover {
+    background-color: #E54545;
+}
+
+.bot-feedback-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.bot-feedback-container span {
+    color: #7D96B3;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.rating-stars {
+    display: flex;
+    font-size: 18px;
+}
+
+.rating-star {
+    cursor: pointer;
+    color: #7D96B3; 
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.rating-star:hover {
+    color: #FFD700; 
+    transform: scale(1.1);
+}
+
+.rating-star.rated,
+.rating-stars:hover .rating-star {
+    color: #FFD700; 
+}
+
+.rating-stars .rating-star.temp-hover ~ .rating-star,
+.rating-stars .rating-star.rated ~ .rating-star:not(.rated) {
+    color: #7D96B3;
 }
