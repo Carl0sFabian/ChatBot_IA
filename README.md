@@ -271,3 +271,80 @@ A continuación se muestra información sobre el conjunto final de datos obtenid
 | *EP5* | *US15* | Coherencia de respuestas del chatbot | Como terapeuta, quiero que el chatbot de respuestas coherentes, para ayudar a los niños a practicar habilidades de comunicación. | *Escenario 1:* Respuesta coherente del chatbot<br>Dado que un niño con TEA interactúa con el chatbot, cuando se envía una respuesta a un mensaje de entrada, entonces la respuesta es coherente, adecuada al contexto, y facilita el desarrollo de habilidades de comunicación.<br><br>*Escenario 2:* Respuesta incoherente del chatbot<br>Dado que un niño con TEA interactúa con el chatbot, cuando se envía una respuesta a un mensaje de entrada y la respuesta es incoherente, entonces se dificulta el aprendizaje de habilidades de comunicación. | 5 |
 | *EP6* | *US16* | Integrar medallas y recompensas por interactuar con el chatbot | Como desarrollador, quiero integrar recompensas visuales como estrellas o medallas después de cada interacción exitosa, para motivar a los niños a seguir utilizando el chatbot. | *Escenario 1:* Recompensas visuales integradas correctamente<br>Dado que un niño con TEA interactúa con el chatbot, cuando envía cierta cantidad de mensajes o mantiene cierta cantidad de conversaciones, entonces recibe una recompensa visual, como una estrella o medalla, que aparece de manera clara y motivadora.<br><br>*Escenario 2:* Recompensas visuales no generadas<br>Dado que un niño con TEA interactúa con el chatbot, cuando envía cierta cantidad de mensajes o mantiene cierta cantidad de conversaciones pero no recibe una recompensa visual, entonces el niño se siente desmotivado. | 3 |
 | *EP6* | *US17* | Progresión de las recompensas a mayor interacción con el chatbot | Como terapeuta, quiero que las recompensas visuales se alineen con sus niveles de habilidad, para incentivar el uso del chatbot y el desarrollo de sus habilidades comunicativas. | *Escenario 1:* Recompensas visuales alineadas con los niveles de habilidad<br>Dado que un niño con TEA interactúa con el chatbot, cuando genera más interacciones, entonces las tareas son más desafiantes y las recompensas más llamativas.<br><br>*Escenario 2:* Recompensas visuales no alineadas con los niveles de habilidad<br>Dado que un niño con TEA interactúa con el chatbot, cuando genera más interacciones y no hay progreso en las misiones dadas, entonces el niño no se siente motivado a seguir interactuando. | 5 |
+
+[4:17 p.m., 11/10/2025] Camila Ibarra: ### *Product Backlog*
+
+#### *Épicas*
+
+| ID | Nombre |
+| :--- | :--- |
+| EP1 | Como usuario, quiero que el chatbot use lenguaje sencillo y claro, para entender y comunicarse de manera efectiva. |
+| EP2 | Como usuario, quiero comunicarme con pictogramas para aprender a asociar mis necesidades y emociones con imágenes. |
+| EP3 | Como usuario, quiero personalizar el chatbot para adaptarlo a las rutinas y necesidades del niño. |
+| EP4 | Como usuario, quiero que la interfaz gráfica sea intuitiva y accesible, para que los niños interactúen con el chatbot de manera fácil y cómoda. |
+| EP5 | Como usuario, quiero que el chatbot sea capaz de gestionar conversaciones usando modelos de IA basados en reglas y aprendizaje…
+[4:22 p.m., 11/10/2025] Camila Ibarra: Claro, aquí tienes la información estructurada en formato Markdown.
+Va despues del cronograma
+---
+
+## *Plan por Fases (CRISP-DM) y Cronograma*
+
+### *Fase 1 — Comprensión del negocio (Sem 1: 15–21 Sep)*
+- Análisis de necesidades y casos de uso del usuario (niños con dificultades comunicativas), objetivos de éxito y consideraciones éticas/ciudadanía.
+- Definir alcance del asistente: NLP + módulo de pictogramas + GUI + API.
+- *Entregable:* objetivos y criterios de aceptación.
+
+### *Fase 2 — Comprensión de datos (Sem 2: 22–28 Sep)*
+- Identificar y justificar fuentes de datos y licencias; bosquejar diccionario de datos.
+- Realizar EDA inicial y primeras visualizaciones.
+- *Entregable:* fuentes documentadas.
+
+### *Fase 3 — Preparación de datos (Sem 3: 29 Sep–5 Oct)*
+- Limpiar, normalizar y estandarizar a un formato común (train/val/test).
+- Elaborar el data dictionary.
+- *Entregables:* dataset limpio + cuaderno EDA.
+
+### *Fase 4 — Modelado (Sem 4–6: 6–26 Oct)*
+- Construir baseline rápido (reglas / TF-IDF + Naive Bayes o Regresión Logística).
+- Iterar con embeddings en español + SVM/BiLSTM; prototipo de mapeo texto→pictogramas.
+- *Entregable:* modelo baseline y versión mejorada.
+
+### *Fase 5 — Evaluación (Sem 7–10: 27 Oct–16 Nov)*
+- Probar backend/frontend y casos simulados de interacción; manejar errores y ajustar UX.
+- Serializar el modelo (joblib/pickle) y medir latencia.
+- *Entregables:* reportes de pruebas y modelo serializado.
+
+### *Fase 6 — Despliegue (Sem 11–15: 17–30 Nov)*
+- Integrar GUI con el modelo (inputs: texto/pictos; outputs: texto/voz/pictos) y documentar API REST; ejecutar pruebas integradas.
+- Preparar manual de usuario y paquete final (código, datos de ejemplo, modelo).
+- *Entregables:* build final, paquete completo, informe y demo (“release”).
+
+---
+
+## *Propuesta de Técnicas y Algoritmos*
+
+Se prioriza un diseño simple y transparente apto para ejecución local. Se parte de un baseline y se escalará únicamente si las métricas lo requieren. La solución comprende cuatro componentes: control del diálogo, clasificación de intenciones, extracción de información clave y asociación de texto a pictogramas.
+
+A continuación, se detallan los componentes y algoritmos seleccionados:
+
+### *Agentes basados en conocimiento y lógica (control del diálogo)*
+El flujo conversacional (saludo → identificación de necesidad → confirmación → cierre) se manejará con una máquina de estados apoyada en reglas. Según McTear et al. (2016), las máquinas de estados finitas proporcionan un modelo formal efectivo para mapear flujos conversacionales estructurados en sistemas de diálogo. Cada cambio de estado ocurre cuando se cumple algo observable (por ejemplo, que la intención fue detectada con suficiente confianza o que ya se completó un dato necesario). Si el sistema no está seguro, se activa un mecanismo de respaldo que pide aclarar o confirmar antes de seguir. Este enfoque es fácil de entender y de depurar, y encaja bien con el alcance del proyecto.
+
+### *Procesamiento de Lenguaje Natural (NLP): minería y análisis de texto*
+Para reconocer intenciones, convertimos el texto a números con TF-IDF y entrenamos un clasificador de Regresión Logística como punto de partida. Como explican Jurafsky y Martin (2024), esta combinación da buena precisión con pocos datos, es rápida y permite explicar qué palabras pesaron más en la decisión, lo cual es fundamental para sistemas que requieren transparencia. La compararemos con Naive Bayes; si no alcanzamos la meta, probaremos un Perceptrón Multicapa (MLP) pequeño como mejora gradual.
+
+Para la extracción de información clave, completaremos los datos necesarios del diálogo (por ejemplo, OBJETO, LUGAR, ACCIÓN, COMIDA/BEBIDA) usando listas de vocabulario controladas, lematización (llevar cada palabra a su forma base) y expresiones regulares para patrones frecuentes. Bird et al. (2009) demuestran que la lematización mediante herramientas como NLTK permite reducir las palabras a su forma base de manera efectiva, facilitando el procesamiento posterior del texto. Es una solución simple y robusta que evita modelos de entidades más pesados y mantiene coherencia con el lenguaje del dominio.
+
+Para el mapeo de texto a pictogramas, usaremos un diccionario normalizado que relaciona cada término con su ID de pictograma. Si no hay coincidencia exacta, compararemos la frase del usuario con descripciones breves de los pictogramas mediante similitud del coseno sobre TF-IDF. Manning et al. (2008) señalan que la similitud del coseno es especialmente adecuada para comparar documentos de texto ya que normaliza por la longitud del documento y se enfoca en la orientación de los vectores, permitiendo identificar similitudes semánticas independientemente del tamaño del texto. Mostraremos un top-3 de opciones, cubriendo así sinónimos y variantes de redacción de forma auditable.
+
+### *Redes neuronales: Perceptrón / MLP (Backpropagation) — mejora gradual*
+Si el modelo base no llega a la calidad esperada, incorporaremos un MLP de una sola capa oculta para mejorar el rendimiento sin perder rapidez. Rumelhart et al. (1986) introdujeron el algoritmo de backpropagation que permite entrenar redes neuronales multicapa de manera eficiente mediante la propagación hacia atrás del error, facilitando el aprendizaje de representaciones no lineales. Esta decisión se tomará sólo si los resultados medidos lo justifican.
+
+---
+
+### *Criterios de Aceptación (Métricas)*
+- *Intenciones:* Macro-F1 ≥ 0.80 (se reportará también Accuracy).
+- *Pictogramas:* Prec@1 ≥ 70% y Prec@3 ≥ 90%.
+- *Diálogo (FSM):* ≥ 85 % de conversaciones completadas y 3–5 pasos de media por objetivo.
+- *Rendimiento:* tiempo p95 por turno < 500 ms en ejecución local.
+
