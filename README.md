@@ -90,20 +90,59 @@ La base para un modelo de IA conversacional robusto es un conjunto de datos dive
 
 Los datasets fuente fueron:
 
-- **Harsit/xnli2.0_train_spanish:** Es parte de la Cross-lingual Natural Language Inference (XNLI) corpus. Se compone de pares de frases (premisa e hipótesis) en español. Es útil para tareas de comprensión del lenguaje natural y razonamiento, ya que aporta pares de frases que ayudan al modelo a entender el razonamiento y la inferencia.
+- **Harsit/xnli2.0_train_spanish:** Es parte de la Cross-lingual Natural Language Inference (XNLI) corpus. Se compone de pares de frases (premisa e hipótesis) en español. Es útil para tareas de comprensión del lenguaje natural y razonamiento, ya que aporta pares de frases que ayudan al modelo a entender el razonamiento y la inferencia.  Se obtuvo el dataset leyendo la ruta del archivo csv publicado de la fuente original.
 
   Obtenido de: [https://huggingface.co/datasets/Harsit/xnli2.0_train_spanish](https://huggingface.co/datasets/Harsit/xnli2.0_train_spanish)
 
-  Se obtuvo el dataset leyendo la ruta del archivo csv publicado de la fuente original.
+    ```python
+    # Cargar el dataset "xnli2.0_train_spanish"
+    # Fuente: https://huggingface.co/datasets/Harsit/xnli2.0_train_spanish
+    
+    try:
+        df_xnli = pd.read_csv("hf://datasets/Harsit/xnli2.0_train_spanish/spanish_train.csv")
+    except Exception as e:
+        print(f"Error loading xnli2.0_train_spanish: {e}")
+        df_xnli = None
+    
+    if df_xnli is not None:
+        df_xnli = df_xnli[['premise', 'hypothesis']].copy()
+        df_xnli = df_xnli.rename(columns={'premise': 'pregunta', 'hypothesis': 'respuesta'})
+        df_xnli = df_xnli[['pregunta', 'respuesta']]
 
-- **Benjleite/FairytaleQA-translated-spanish:** Contiene preguntas y respuestas sobre cuentos infantiles en español. Es útil para tareas de respuesta a preguntas y comprensión de lectura. Dado que contiene preguntas y respuestas sencillas sobre cuentos infantiles, es un material temático ideal para nuestro público objetivo.
+- **Benjleite/FairytaleQA-translated-spanish:** Contiene preguntas y respuestas sobre cuentos infantiles en español. Es útil para tareas de respuesta a preguntas y comprensión de lectura. Dado que contiene preguntas y respuestas sencillas sobre cuentos infantiles, es un material temático ideal para nuestro público objetivo. El dataset se obtuvo mediante una lectura de json de los datos de entrenamiento de la fuente de origen.
 
   Obtenido de: [https://huggingface.co/datasets/benjleite/FairytaleQA-translated-spanish](https://huggingface.co/datasets/benjleite/FairytaleQA-translated-spanish)
 
-  El dataset se obtuvo mediante una lectura de json de los datos de entrenamiento de la fuente de origen.
+  ```python
+  # Cargar el dataset "FairytaleQA-translated-spanish"
+  # Fuente: https://huggingface.co/datasets/benjleite/FairytaleQA-translated-spanish
+  
+  splits = {'train': 'train.json', 'validation': 'validation.json', 'test': 'test.json'}
+  df = pd.read_json("hf://datasets/benjleite/FairytaleQA-translated-spanish/" + splits["train"])
+  
+  if 'df' in globals() and df is not None:
+      df_fairytale = df[['question', 'answer']].copy()
+      df_fairytale = df_fairytale.rename(columns={'question': 'pregunta', 'answer': 'respuesta'})
+      df_fairytale = df_fairytale[['pregunta', 'respuesta']]
+  else:
+      df_fairytale = None
+      print("FairytaleQA-translated-spanish dataframe not found.")
 
-- **Kukedlc/spanish-train:** Contiene pares de instrucción y pregunta en español (equivalentes a input y output) de conversaciones e interacciones de un chatbot externo. Ofrece un corpus general de instrucciones y respuestas útil como conocimiento general del chatbot sobre diversos dominios de temas más avanzados. Asimismo, ofrece una estructura de ejemplo para estructurar las respuestas.  
+
+- **Kukedlc/spanish-train:** Contiene pares de instrucción y pregunta en español (equivalentes a input y output) de conversaciones e interacciones de un chatbot externo. Ofrece un corpus general de instrucciones y respuestas útil como conocimiento general del chatbot sobre diversos dominios de temas más avanzados. Asimismo, ofrece una estructura de ejemplo para estructurar las respuestas. Se obtuvieron los datos mediante `load_dataset`, una función que permite cargar conjunto de datos de Hugging Face.
 
   Obtenido de: [https://huggingface.co/datasets/Kukedlc/spanish-train](https://huggingface.co/datasets/Kukedlc/spanish-train)
 
-  Se obtuvieron los datos mediante `load_dataset`, una función que permite cargar conjunto de datos de Hugging Face.
+  ```python
+  # Cargar el dataset "spanish-train"
+  # Fuente: https://huggingface.co/datasets/Kukedlc/spanish-train
+  
+  ds = load_dataset("Kukedlc/spanish-train")
+  
+  if 'ds' in globals() and ds is not None:
+      df_spanish_train = ds['train'].to_pandas()
+      df_spanish_train = df_spanish_train.rename(columns={'instruction': 'pregunta', 'output': 'respuesta'})
+      df_spanish_train = df_spanish_train[['pregunta', 'respuesta']]
+  else:
+      df_spanish_train = None
+      print("spanish-train dataset not found.")
