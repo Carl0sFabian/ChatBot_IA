@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const chatItem = document.createElement('div');
                     chatItem.className = 'chat-item';
                     chatItem.setAttribute('data-chat-id', chat.id);
-                    const avatar = chat.avatar || 'images/bot.webp';
+                    const avatar = chat.avatar || 'images/Agente.webp';
                     chatItem.innerHTML = `<div class="chat-avatar-container"><div class="chat-avatar-bg"></div><img class="chat-avatar" src="${avatar}" alt="Avatar" /><div class="chat-status-green"></div></div><div class="chat-name">${chat.name}</div><div class="chat-item__icon green"><i class="fa-solid fa-comment-dots"></i></div>`;
                     chatListContainer.appendChild(chatItem);
                     chatItem.addEventListener('click', () => {
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(async () => {
                 const botResponse = obtenerRespuesta(userText);
                 const pictogramas = await buscarPictogramas(botResponse);
-                const botMessage = { type: 'bot', text: botResponse, pictogramas, timestamp: firebase.firestore.FieldValue.serverTimestamp(), contentType: 'text', rating: 0 }; // Añadido rating inicial
+                const botMessage = { type: 'bot', text: botResponse, pictogramas, timestamp: firebase.firestore.FieldValue.serverTimestamp(), contentType: 'text', rating: 0 }; 
                 if (currentChatId) {
                     db.collection('chats').doc(currentChatId).collection('messages').add(botMessage);
                 }
